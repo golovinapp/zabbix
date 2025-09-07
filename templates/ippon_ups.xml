@@ -1,416 +1,176 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-  <version>7.4</version>
-
-  <template_groups>
-    <template_group>
-      <uuid>0f3a8e0c7b3e4a0a9f8c1d2e3b4a5c6d</uuid>
-      <name>Templates/UPS</name>
-    </template_group>
-  </template_groups>
-
+  <version>5.0</version>
+  <date>2025-09-07T11:48:42Z</date>
+  <groups>
+    <group>
+      <name>UPS</name>
+    </group>
+  </groups>
   <templates>
     <template>
-      <uuid>4d7a2f01e0d2471e8c7521c7d0ab94e1</uuid>
-      <template>Template SNMP UPS Ippon (WebPower Smart II)</template>
+      <template>Template_SNMP_UPS_Ippon</template>
       <name>Template SNMP UPS Ippon (WebPower Smart II)</name>
-      <description>UPS Ippon / WebPower Smart II via UPS-MIB (RFC1628). Items + LLD; триггеры вложены внутрь соответствующих items; value maps внутри шаблона.</description>
-
       <groups>
         <group>
-          <name>Templates/UPS</name>
+          <name>UPS</name>
         </group>
       </groups>
-
+      <applications>
+        <application><name>SNMP UPS</name></application>
+      </applications>
       <items>
         <item>
-          <uuid>a2c9b1e5d4f0461bb0c0d6b6e2e8a3f5</uuid>
-          <name>UPS: SysDescr</name>
+          <name>UPS model</name>
           <type>SNMP_AGENT</type>
-          <key>ups.sysdescr</key>
-          <snmp_oid>1.3.6.1.2.1.1.1.0</snmp_oid>
-          <delay>1h</delay>
-          <value_type>TEXT</value_type>
+          <snmp_oid>iso.3.6.1.2.1.33.1.1.4.0</snmp_oid>
+          <key>ups.model</key>
+          <value_type>CHAR</value_type>
+          <applications>
+            <application>
+              <name>SNMP UPS</name>
+            </application>
+          </applications>
         </item>
-
         <item>
-          <uuid>e36b2e0b984c46c6a93e6d4df0f1b7ad</uuid>
-          <name>UPS: Agent software</name>
-          <type>SNMP_AGENT</type>
-          <key>ups.ident.software</key>
-          <snmp_oid>1.3.6.1.2.1.33.1.1.4.0</snmp_oid>
-          <delay>1h</delay>
-          <value_type>TEXT</value_type>
-        </item>
-
-        <item>
-          <uuid>0c6a6b1c4c7d4a24b2e0c0a8f4e2bd81</uuid>
-          <name>System uptime (s)</name>
-          <type>SNMP_AGENT</type>
-          <key>system.uptime</key>
-          <snmp_oid>1.3.6.1.2.1.1.3.0</snmp_oid>
-          <delay>5m</delay>
-          <units>s</units>
-        </item>
-
-        <item>
-          <uuid>0c2a0a2a686b4a7fa6c4f4d8c672c2d3</uuid>
           <name>Battery status</name>
           <type>SNMP_AGENT</type>
+          <snmp_oid>iso.3.6.1.2.1.33.1.2.1.0</snmp_oid>
           <key>ups.battery.status</key>
-          <snmp_oid>1.3.6.1.2.1.33.1.2.1.0</snmp_oid>
-          <delay>1m</delay>
-          <value_type>UNSIGNED</value_type>
-          <description>1=unknown, 2=normal, 3=low, 4=depleted</description>
-          <valuemap>
-            <name>UPS-MIB: upsBatteryStatus</name>
-          </valuemap>
-          <tags>
-            <tag>
-              <tag>scope</tag>
-              <value>battery</value>
-            </tag>
-          </tags>
-          <triggers>
-            <trigger>
-              <uuid>f2cd0d3f5a8d4b1cb8b2a1c0ef7b2a91</uuid>
-              <expression>{Template SNMP UPS Ippon (WebPower Smart II):ups.battery.status.last()}=3 or {Template SNMP UPS Ippon (WebPower Smart II):ups.battery.status.last()}=4</expression>
-              <name>UPS: Battery status is LOW or DEPLETED</name>
-              <priority>AVERAGE</priority>
-              <tags>
-                <tag>
-                  <tag>scope</tag>
-                  <value>battery</value>
-                </tag>
-              </tags>
-            </trigger>
-          </triggers>
+          <value_type>FLOAT</value_type>
+          <applications>
+            <application>
+              <name>SNMP UPS</name>
+            </application>
+          </applications>
+        <triggers>
+          <trigger>
+            <expression>{last(0)}&lt;&gt;2</expression>
+            <name>Battery problem on {HOST.NAME}</name>
+            <priority>DISASTER</priority>
+            <manual_close>YES</manual_close>
+          </trigger>
+        </triggers>
         </item>
-
         <item>
-          <uuid>5f0f7c0f3c0f4d6989a6b9a6150b9b7c</uuid>
-          <name>Seconds on battery</name>
-          <type>SNMP_AGENT</type>
-          <key>ups.battery.son</key>
-          <snmp_oid>1.3.6.1.2.1.33.1.2.2.0</snmp_oid>
-          <delay>1m</delay>
-          <units>s</units>
-        </item>
-
-        <item>
-          <uuid>a6e5f2b7c3c44549a2bc317c2d0f5460</uuid>
           <name>Battery charge (%)</name>
           <type>SNMP_AGENT</type>
+          <snmp_oid>iso.3.6.1.2.1.33.1.2.4.0</snmp_oid>
           <key>ups.battery.charge</key>
-          <snmp_oid>1.3.6.1.2.1.33.1.2.4.0</snmp_oid>
-          <delay>1m</delay>
+          <value_type>FLOAT</value_type>
           <units>%</units>
-          <triggers>
-            <trigger>
-              <uuid>4b9a8b7a2d2a47d1a9a2f0e1b9c4d2e8</uuid>
-              <expression>{Template SNMP UPS Ippon (WebPower Smart II):ups.battery.charge.last()}&lt;{$UPS.BATT_WARN_PCT}</expression>
-              <name>UPS: Low battery (&lt; {$UPS.BATT_WARN_PCT}%)</name>
-              <priority>AVERAGE</priority>
-              <tags>
-                <tag>
-                  <tag>scope</tag>
-                  <value>battery</value>
-                </tag>
-              </tags>
-            </trigger>
-          </triggers>
+          <applications>
+            <application>
+              <name>SNMP UPS</name>
+            </application>
+          </applications>
+        <triggers>
+          <trigger>
+            <expression>{last(0)}&lt;20</expression>
+            <name>Battery low charge on {HOST.NAME}</name>
+            <priority>HIGH</priority>
+            <manual_close>YES</manual_close>
+          </trigger>
+        </triggers>
         </item>
-
         <item>
-          <uuid>c2cf2a8f4b8d4c17b0a69e8f0a7b3d4a</uuid>
-          <name>Battery voltage (V)</name>
+          <name>Battery runtime remaining (s)</name>
           <type>SNMP_AGENT</type>
-          <key>ups.battery.voltage</key>
-          <snmp_oid>1.3.6.1.2.1.33.1.2.5.0</snmp_oid>
-          <delay>1m</delay>
+          <snmp_oid>iso.3.6.1.2.1.33.1.2.3.0</snmp_oid>
+          <key>ups.battery.runtime</key>
+          <value_type>FLOAT</value_type>
+          <units>s</units>
+          <applications>
+            <application>
+              <name>SNMP UPS</name>
+            </application>
+          </applications>
+        <triggers>
+          <trigger>
+            <expression>{last(0)}&lt;300</expression>
+            <name>Battery runtime less than 5 min on {HOST.NAME}</name>
+            <priority>DISASTER</priority>
+            <manual_close>YES</manual_close>
+          </trigger>
+        </triggers>
+        </item>
+        <item>
+          <name>Input voltage</name>
+          <type>SNMP_AGENT</type>
+          <snmp_oid>iso.3.6.1.2.1.33.1.3.3.1.3.1</snmp_oid>
+          <key>ups.input.voltage</key>
           <value_type>FLOAT</value_type>
           <units>V</units>
+          <applications>
+            <application>
+              <name>SNMP UPS</name>
+            </application>
+          </applications>
+        <triggers>
+          <trigger>
+            <expression>{last(0)}&lt;200</expression>
+            <name>Input voltage low on {HOST.NAME}</name>
+            <priority>AVERAGE</priority>
+            <manual_close>YES</manual_close>
+          </trigger>
+        </triggers>
         </item>
-
         <item>
-          <uuid>4a1c9f6b8e3f4a61a9b8c7d0e1f2a3c4</uuid>
-          <name>Battery temperature (°C)</name>
+          <name>Output voltage</name>
           <type>SNMP_AGENT</type>
-          <key>ups.battery.temp</key>
-          <snmp_oid>1.3.6.1.2.1.33.1.2.7.0</snmp_oid>
-          <delay>1m</delay>
+          <snmp_oid>iso.3.6.1.2.1.33.1.4.4.1.2.1</snmp_oid>
+          <key>ups.output.voltage</key>
+          <value_type>FLOAT</value_type>
+          <units>V</units>
+          <applications>
+            <application>
+              <name>SNMP UPS</name>
+            </application>
+          </applications>
+        </item>
+        <item>
+          <name>Output load (%)</name>
+          <type>SNMP_AGENT</type>
+          <snmp_oid>iso.3.6.1.2.1.33.1.4.4.1.5.1</snmp_oid>
+          <key>ups.output.load</key>
+          <value_type>FLOAT</value_type>
+          <units>%</units>
+          <applications>
+            <application>
+              <name>SNMP UPS</name>
+            </application>
+          </applications>
+        <triggers>
+          <trigger>
+            <expression>{last(0)}&gt;90</expression>
+            <name>UPS overload on {HOST.NAME}</name>
+            <priority>HIGH</priority>
+            <manual_close>YES</manual_close>
+          </trigger>
+        </triggers>
+        </item>
+        <item>
+          <name>Temperature (°C)</name>
+          <type>SNMP_AGENT</type>
+          <snmp_oid>iso.3.6.1.2.1.33.1.2.7.0</snmp_oid>
+          <key>ups.temperature</key>
           <value_type>FLOAT</value_type>
           <units>°C</units>
-          <triggers>
-            <trigger>
-              <uuid>0f9e8d7c6b5a4a31b2c3d4e5f6a7b8c9</uuid>
-              <expression>{Template SNMP UPS Ippon (WebPower Smart II):ups.battery.temp.last()}&gt;{$UPS.TEMP_HIGH}</expression>
-              <name>UPS: High battery temperature (&gt; {$UPS.TEMP_HIGH}°C)</name>
-              <priority>HIGH</priority>
-              <tags>
-                <tag>
-                  <tag>scope</tag>
-                  <value>thermal</value>
-                </tag>
-              </tags>
-            </trigger>
-          </triggers>
-        </item>
-
-        <item>
-          <uuid>e4c2b1a0d9f84a53a2b7c6d5e4f3a2b1</uuid>
-          <name>Output source</name>
-          <type>SNMP_AGENT</type>
-          <key>ups.output.source</key>
-          <snmp_oid>1.3.6.1.2.1.33.1.4.1.0</snmp_oid>
-          <delay>1m</delay>
-          <value_type>UNSIGNED</value_type>
-          <description>1=other,2=none,3=normal,4=bypass,5=battery,6=booster(AVR),7=reducer</description>
-          <valuemap>
-            <name>UPS-MIB: upsOutputSource</name>
-          </valuemap>
-          <tags>
-            <tag>
-              <tag>scope</tag>
-              <value>power</value>
-            </tag>
-          </tags>
-          <triggers>
-            <trigger>
-              <uuid>1a2b3c4d5e6f47a9b0c1d2e3f4a5b6c7</uuid>
-              <expression>{Template SNMP UPS Ippon (WebPower Smart II):ups.output.source.last()}=5</expression>
-              <name>UPS: Running on battery</name>
-              <priority>WARNING</priority>
-              <tags>
-                <tag>
-                  <tag>scope</tag>
-                  <value>availability</value>
-                </tag>
-              </tags>
-            </trigger>
-          </triggers>
-        </item>
-
-        <item>
-          <uuid>7d6c5b4a3a2b4c5d6e7f8091a2b3c4d5</uuid>
-          <name>Output frequency (Hz)</name>
-          <type>SNMP_AGENT</type>
-          <key>ups.output.freq</key>
-          <snmp_oid>1.3.6.1.2.1.33.1.4.2.0</snmp_oid>
-          <delay>1m</delay>
-          <value_type>FLOAT</value_type>
-          <units>Hz</units>
-        </item>
-
-        <item>
-          <uuid>9a8b7c6d5e4f4a3b2c1d0e9f8a7b6c5d</uuid>
-          <name>Alarms present</name>
-          <type>SNMP_AGENT</type>
-          <key>ups.alarms.present</key>
-          <snmp_oid>1.3.6.1.2.1.33.1.6.1.0</snmp_oid>
-          <delay>1m</delay>
-          <value_type>UNSIGNED</value_type>
-          <triggers>
-            <trigger>
-              <uuid>c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3</uuid>
-              <expression>{Template UPS Ippon:ups.alarms.present.last()}&gt;0</expression>
-              <name>UPS: Alarms present</name>
-              <priority>AVERAGE</priority>
-              <tags>
-                <tag>
-                  <tag>scope</tag>
-                  <value>fault</value>
-                </tag>
-              </tags>
-            </trigger>
-          </triggers>
-        </item>
-
-        <item>
-          <uuid>f0e1d2c3b4a5968790ab1c2d3e4f5061</uuid>
-          <name>Estimated minutes remaining</name>
-          <type>SNMP_AGENT</type>
-          <key>ups.battery.runtime</key>
-          <snmp_oid>1.3.6.1.2.1.33.1.2.3.0</snmp_oid>
-          <delay>1m</delay>
-          <units>min</units>
+          <applications>
+            <application>
+              <name>SNMP UPS</name>
+            </application>
+          </applications>
+        <triggers>
+          <trigger>
+            <expression>{last(0)}&gt;50</expression>
+            <name>UPS high temperature on {HOST.NAME}</name>
+            <priority>AVERAGE</priority>
+            <manual_close>YES</manual_close>
+          </trigger>
+        </triggers>
         </item>
       </items>
-
-      <discovery_rules>
-        <discovery_rule>
-          <uuid>acbd18db4cc24a6e8b9d9f1a2b3c4d5e</uuid>
-          <name>UPS Input Lines discovery</name>
-          <type>SNMP_AGENT</type>
-          <key>ups.input.discovery</key>
-          <snmp_oid>discovery[1.3.6.1.2.1.33.1.3.3.1.1]</snmp_oid>
-          <delay>5m</delay>
-          <item_prototypes>
-            <item_prototype>
-              <uuid>b0a1c2d3e4f5568790ab1c2d3e4f5a60</uuid>
-              <name>Input line {#SNMPINDEX} voltage (V)</name>
-              <type>SNMP_AGENT</type>
-              <key>ups.input.voltage[{#SNMPINDEX}]</key>
-              <snmp_oid>1.3.6.1.2.1.33.1.3.3.1.3.{#SNMPINDEX}</snmp_oid>
-              <delay>1m</delay>
-              <value_type>FLOAT</value_type>
-              <units>V</units>
-            </item_prototype>
-          </item_prototypes>
-        </discovery_rule>
-
-        <discovery_rule>
-          <uuid>c4ca4238a0b923820dcc509a6f75849b</uuid>
-          <name>UPS Output Lines discovery</name>
-          <type>SNMP_AGENT</type>
-          <key>ups.output.discovery</key>
-          <snmp_oid>discovery[1.3.6.1.2.1.33.1.4.4.1.1]</snmp_oid>
-          <delay>5m</delay>
-          <item_prototypes>
-            <item_prototype>
-              <uuid>c81e728d9d4c2f636f067f89cc14862c</uuid>
-              <name>Output line {#SNMPINDEX} voltage (V)</name>
-              <type>SNMP_AGENT</type>
-              <key>ups.output.voltage[{#SNMPINDEX}]</key>
-              <snmp_oid>1.3.6.1.2.1.33.1.4.4.1.2.{#SNMPINDEX}</snmp_oid>
-              <delay>1m</delay>
-              <value_type>FLOAT</value_type>
-              <units>V</units>
-            </item_prototype>
-            <item_prototype>
-              <uuid>eccbc87e4b5ce2fe28308fd9f2a7baf3</uuid>
-              <name>Output line {#SNMPINDEX} load (%)</name>
-              <type>SNMP_AGENT</type>
-              <key>ups.output.load[{#SNMPINDEX}]</key>
-              <snmp_oid>1.3.6.1.2.1.33.1.4.4.1.5.{#SNMPINDEX}</snmp_oid>
-              <delay>1m</delay>
-              <value_type>UNSIGNED</value_type>
-              <units>%</units>
-            </item_prototype>
-          </item_prototypes>
-        </discovery_rule>
-      </discovery_rules>
-
-      <tags>
-        <tag>
-          <tag>role</tag>
-          <value>ups</value>
-        </tag>
-        <tag>
-          <tag>vendor</tag>
-          <value>ippon</value>
-        </tag>
-      </tags>
-
-      <macros>
-        <macro>
-          <macro>{$SNMP_COMMUNITY}</macro>
-          <value>public</value>
-          <description>SNMPv2 community</description>
-        </macro>
-        <macro>
-          <macro>{$UPS.BATT_WARN_PCT}</macro>
-          <value>30</value>
-          <description>Low battery threshold (%)</description>
-        </macro>
-        <macro>
-          <macro>{$UPS.TEMP_HIGH}</macro>
-          <value>40</value>
-          <description>High battery temperature threshold (°C)</description>
-        </macro>
-      </macros>
-
-      <valuemaps>
-        <valuemap>
-          <uuid>d41d8cd98f00b204e9800998ecf8427e</uuid>
-          <name>UPS-MIB: upsBatteryStatus</name>
-          <mappings>
-            <mapping>
-              <value>1</value>
-              <newvalue>unknown</newvalue>
-            </mapping>
-            <mapping>
-              <value>2</value>
-              <newvalue>normal</newvalue>
-            </mapping>
-            <mapping>
-              <value>3</value>
-              <newvalue>low</newvalue>
-            </mapping>
-            <mapping>
-              <value>4</value>
-              <newvalue>depleted</newvalue>
-            </mapping>
-          </mappings>
-        </valuemap>
-
-        <valuemap>
-          <uuid>45c48cce2e2d7fbdea1afc51c7c6ad26</uuid>
-          <name>UPS-MIB: upsOutputSource</name>
-          <mappings>
-            <mapping>
-              <value>1</value>
-              <newvalue>other</newvalue>
-            </mapping>
-            <mapping>
-              <value>2</value>
-              <newvalue>none</newvalue>
-            </mapping>
-            <mapping>
-              <value>3</value>
-              <newvalue>normal</newvalue>
-            </mapping>
-            <mapping>
-              <value>4</value>
-              <newvalue>bypass</newvalue>
-            </mapping>
-            <mapping>
-              <value>5</value>
-              <newvalue>battery</newvalue>
-            </mapping>
-            <mapping>
-              <value>6</value>
-              <newvalue>booster</newvalue>
-            </mapping>
-            <mapping>
-              <value>7</value>
-              <newvalue>reducer</newvalue>
-            </mapping>
-          </mappings>
-        </valuemap>
-
-        <valuemap>
-          <uuid>c20ad4d76fe97759aa27a0c99bff6710</uuid>
-          <name>UPS-MIB: upsTestResultsSummary</name>
-          <mappings>
-            <mapping>
-              <value>1</value>
-              <newvalue>noTestsInitiated</newvalue>
-            </mapping>
-            <mapping>
-              <value>2</value>
-              <newvalue>donePass</newvalue>
-            </mapping>
-            <mapping>
-              <value>3</value>
-              <newvalue>doneWarning</newvalue>
-            </mapping>
-            <mapping>
-              <value>4</value>
-              <newvalue>doneError</newvalue>
-            </mapping>
-            <mapping>
-              <value>5</value>
-              <newvalue>aborted</newvalue>
-            </mapping>
-            <mapping>
-              <value>6</value>
-              <newvalue>inProgress</newvalue>
-            </mapping>
-          </mappings>
-        </valuemap>
-      </valuemaps>
-
     </template>
   </templates>
 </zabbix_export>
