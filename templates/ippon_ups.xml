@@ -213,7 +213,7 @@
           <triggers>
             <trigger>
               <uuid>c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3</uuid>
-              <expression>{Template SNMP UPS Ippon (WebPower Smart II):ups.alarms.present.last()}&gt;0</expression>
+              <expression>{Template UPS Ippon:ups.alarms.present.last()}&gt;0</expression>
               <name>UPS: Alarms present</name>
               <priority>AVERAGE</priority>
               <tags>
