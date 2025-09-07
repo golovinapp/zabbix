@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
   <version>7.0</version>
-  <date>2025-09-07T00:00:00Z</date>
-  <groups>
+
+  <template_groups>
     <group>
       <name>Templates/Power</name>
     </group>
-  </groups>
+  </template_groups>
+
   <templates>
     <template>
       <template>Template SNMP UPS Ippon (WebPower Smart II)</template>
       <name>Template SNMP UPS Ippon (WebPower Smart II)</name>
       <description>SNMP-мониторинг Ippon / WebPower Smart II (UPS-MIB). Добавлены графики и граф-прототипы.</description>
+
       <groups>
         <group>
           <name>Templates/Power</name>
         </group>
       </groups>
+
       <tags>
         <tag>
           <tag>role</tag>
           <value>ups</value>
         </tag>
       </tags>
+
       <macros>
         <macro>
           <macro>{$SNMP_COMMUNITY}</macro>
@@ -40,6 +44,7 @@
           <description>Порог высокой температуры батареи (°C)</description>
         </macro>
       </macros>
+
       <items>
         <item>
           <name>UPS: SysDescr</name>
@@ -163,6 +168,7 @@
           <delay>1m</delay>
         </item>
       </items>
+
       <discovery_rules>
         <discovery_rule>
           <name>UPS Input Lines discovery</name>
@@ -210,6 +216,7 @@
             </graph_prototype>
           </graph_prototypes>
         </discovery_rule>
+
         <discovery_rule>
           <name>UPS Output Lines discovery</name>
           <type>SNMP_AGENT</type>
@@ -262,6 +269,7 @@
           </graph_prototypes>
         </discovery_rule>
       </discovery_rules>
+
       <graphs>
         <graph>
           <name>UPS Battery %</name>
@@ -308,6 +316,7 @@
           </graph_items>
         </graph>
       </graphs>
+
       <triggers>
         <trigger>
           <name>UPS on battery</name>
@@ -336,6 +345,7 @@
           <priority>WARNING</priority>
         </trigger>
       </triggers>
+
       <valuemaps>
         <valuemap>
           <name>UPS-MIB upsBatteryStatus</name>
@@ -359,6 +369,7 @@
           </mappings>
         </valuemap>
       </valuemaps>
+
     </template>
   </templates>
 </zabbix_export>
