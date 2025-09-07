@@ -2,7 +2,6 @@
 <zabbix_export>
   <version>7.4</version>
 
-  <!-- Обязательный блок групп шаблонов -->
   <template_groups>
     <template_group>
       <uuid>0f3a8e0c7b3e4a0a9f8c1d2e3b4a5c6d</uuid>
@@ -17,14 +16,12 @@
       <name>Template SNMP UPS Ippon (WebPower Smart II)</name>
       <description>UPS Ippon / WebPower Smart II via UPS-MIB (RFC1628). Items + LLD; триггеры вложены внутрь соответствующих items; value maps внутри шаблона.</description>
 
-      <!-- Привязка к группе по имени -->
       <groups>
         <group>
           <name>Templates/UPS</name>
         </group>
       </groups>
 
-      <!-- ITEMS (с триггерами внутри items) -->
       <items>
         <item>
           <uuid>a2c9b1e5d4f0461bb0c0d6b6e2e8a3f5</uuid>
@@ -54,12 +51,6 @@
           <snmp_oid>1.3.6.1.2.1.1.3.0</snmp_oid>
           <delay>5m</delay>
           <units>s</units>
-          <preprocessing>
-            <step>
-              <type>MULTIPLIER</type>
-              <params>0.01</params>
-            </step>
-          </preprocessing>
         </item>
 
         <item>
@@ -139,14 +130,6 @@
           <delay>1m</delay>
           <value_type>FLOAT</value_type>
           <units>V</units>
-          <preprocessing>
-            <step>
-              <type>MULTIPLIER</type>
-              <parameters>
-                <parameter>0.1</parameter>
-              </parameters>
-            </step>
-          </preprocessing>
         </item>
 
         <item>
@@ -217,12 +200,6 @@
           <delay>1m</delay>
           <value_type>FLOAT</value_type>
           <units>Hz</units>
-          <preprocessing>
-            <step>
-              <type>MULTIPLIER</type>
-              <params>0.1</params>
-            </step>
-          </preprocessing>
         </item>
 
         <item>
@@ -260,7 +237,6 @@
         </item>
       </items>
 
-      <!-- LLD -->
       <discovery_rules>
         <discovery_rule>
           <uuid>acbd18db4cc24a6e8b9d9f1a2b3c4d5e</uuid>
@@ -315,7 +291,6 @@
         </discovery_rule>
       </discovery_rules>
 
-      <!-- Теги шаблона -->
       <tags>
         <tag>
           <tag>role</tag>
@@ -327,7 +302,6 @@
         </tag>
       </tags>
 
-      <!-- Макросы -->
       <macros>
         <macro>
           <macro>{$SNMP_COMMUNITY}</macro>
@@ -346,7 +320,6 @@
         </macro>
       </macros>
 
-      <!-- Value maps — строго внутри шаблона -->
       <valuemaps>
         <valuemap>
           <uuid>d41d8cd98f00b204e9800998ecf8427e</uuid>
